@@ -97,7 +97,7 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(PORT, () => {
-      console.log(`Node Api server running on port ${3000}`);
+      console.log(`Node Api server running on port ${PORT}`);
     });
   })
   .catch((err) => {
