@@ -1,21 +1,21 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Product = require("./models/productModel");
+
+const PORT = process.env.PORT || 3000;
+const MOGO_URL = process.env.MONGO_URL;
+
 const app = express();
 
 // Middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (origin === "http://localhost:5173" || !origin) {
-        callback(null, true); // Allow request
-      } else {
-        callback(new Error("Not allowed by CORS")); // Deny request
-      }
-    },
-  })
-);
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 // Define the route
 app.get("/", (req, res) => {
@@ -92,13 +92,12 @@ app.post("/products", async (req, res) => {
 });
 
 // Connect to MongoDB
-// mongoose.set("strictQuery", false);
 mongoose
-  .connect("")
+  .connect(MOGO_URL)
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(3000, () => {
-      console.log("Node Api server running on port 3000");
+    app.listen(PORT, () => {
+      console.log(`Node Api server running on port ${3000}`);
     });
   })
   .catch((err) => {
