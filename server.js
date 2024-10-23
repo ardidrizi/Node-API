@@ -5,11 +5,10 @@ const mongoose = require("mongoose");
 const productRoutes = require("./routes/productRoutes");
 const PORT = process.env.PORT || 3000;
 const MOGNO_URL = process.env.MONGO_URL;
-
+const morgan = require("morgan");
 const app = express();
-app.use(express.json({ extended: false }));
+app.use(morgan("dev"));
 // Middleware
-app.use("/api/products", productRoutes);
 
 const corsOptions = {
   origin: ["http://localhost:5173"],
@@ -17,7 +16,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(express.json({ extended: false }));
 // Connect to MongoDB
 mongoose
   .connect(MOGNO_URL)
@@ -30,3 +29,5 @@ mongoose
   .catch((err) => {
     console.log("Error: ", err);
   });
+
+app.use("/api/products", productRoutes);

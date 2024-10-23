@@ -7,7 +7,6 @@ const {
   createProduct,
   deleteProduct,
 } = require("../controllers/productController");
-const Product = require("../models/productModel");
 
 // Define the router
 // Get all
