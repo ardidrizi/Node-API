@@ -20,6 +20,27 @@ const getProduct = async (req, res) => {
   }
 };
 
+const patchProduct = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findByIdAndUpdate(id, req.body);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: `Cannot find the product with id ${id}` });
+    }
+    const updatedProduct = await Product.findById(id).select({
+      name: 1,
+      price: 1,
+      category: 1,
+    });
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   try {
@@ -63,6 +84,36 @@ const deleteProduct = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+const getProductsByCategory = async (req, res) => {
+  const { category } = req.params;
+  try {
+    const products = await Product.find({
+      category: new RegExp(category, "i"),
+    });
+    if (!products) {
+      return res
+        .status(404)
+        .json({ message: `Cannot find the category with id ${id}` });
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+const searchProducts = async (req, res) => {
+  const { keyword } = req.query; // Make sure keyword is coming through correctly
+  try {
+    const products = await Product.find({
+      name: { $regex: keyword, $options: "i" }, // Case-insensitive search on 'name'
+    });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error in searchProducts:", error.message);
+    res.status(500).send("Server Error");
+  }
+};
 
 module.exports = {
   getProducts,
@@ -70,4 +121,7 @@ module.exports = {
   updateProduct,
   createProduct,
   deleteProduct,
+  patchProduct,
+  getProductsByCategory,
+  searchProducts,
 };
