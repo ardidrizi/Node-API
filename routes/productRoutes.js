@@ -7,12 +7,16 @@ const {
   createProduct,
   deleteProduct,
   getProductsByCategory,
+  searchProducts,
 } = require("../controllers/productController");
 
 // Define the router
 // Get all
 router.get("/", getProducts);
+router.post("/", createProduct);
+router.get("/search", searchProducts);
 
+router.delete("/:id", deleteProduct);
 // Get a single with id
 router.get("/:id", getProduct);
 
@@ -23,11 +27,9 @@ router.put("/:id", updateProduct);
 router.patch("/:id", updateProduct);
 
 // Delete
-router.delete("/:id", deleteProduct);
 
 // Create
-router.post("/", createProduct);
 
-router.get("/category/:category", getProductsByCategory);
+router.get("/categories/:category", getProductsByCategory);
 
 module.exports = router;

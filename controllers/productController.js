@@ -102,6 +102,19 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
+const searchProducts = async (req, res) => {
+  const { keyword } = req.query; // Make sure keyword is coming through correctly
+  try {
+    const products = await Product.find({
+      name: { $regex: keyword, $options: "i" }, // Case-insensitive search on 'name'
+    });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error in searchProducts:", error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
@@ -110,4 +123,5 @@ module.exports = {
   deleteProduct,
   patchProduct,
   getProductsByCategory,
+  searchProducts,
 };
